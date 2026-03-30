@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using MUD_Oberstein_Opletal.Commands;
 
 namespace MUD_Oberstein_Opletal;
 
@@ -15,6 +16,7 @@ public class Server
     private TcpListener? _listener;
     private bool _isRunning;
     private readonly World _world;
+    private readonly CommandHandler _commandHandler;
 
     public ConcurrentDictionary<TcpClient, Player> ClientPlayer { get; } = new();
 
@@ -22,6 +24,7 @@ public class Server
     {
         _port = port;
         _world = new World();
+        _commandHandler = new CommandHandler();
     }
 
     public async Task StartAsync()
@@ -86,7 +89,7 @@ public class Server
                     string? input = await reader.ReadLineAsync();
                     if (input == null) break;
 
-                    await ProcessCommand(input, player, writer);
+                    await _commandHandler.ExecuteCommandAsync(input, player, writer);
                 }
             }
         }
@@ -123,152 +126,6 @@ public class Server
                 return playerName;
             }
             await writer.WriteLineAsync("Invalid name. Please try again.");
-        }
-    }
-
-    private async Task ProcessCommand(string command, Player player, StreamWriter writer)
-    {
-        string[] parts = command.ToLower().Split(' ', 2);
-        string action = parts[0];
-        string? argument = parts.Length > 1 ? parts[1] : null;
-
-        switch (action)
-        {
-            case "go":
-            case "jdi":
-                HandleMove(argument, player, writer);
-                break;
-            case "look":
-            case "prozkoumej":
-                await writer.WriteLineAsync(player.CurrentRoom.GetRoomDescription(player));
-                break;
-            case "take":
-            case "vezmi":
-                HandleTake(argument, player, writer);
-                break;
-            case "drop":
-            case "poloz":
-                HandleDrop(argument, player, writer);
-                break;
-            case "inventory":
-            case "inventar":
-                await writer.WriteLineAsync(player.GetInventoryDescription());
-                break;
-            case "talk":
-            case "mluv":
-                HandleTalk(argument, player, writer);
-                break;
-            case "help":
-            case "pomoc":
-                await HandleHelp(writer);
-                break;
-            default:
-                await writer.WriteLineAsync("Unknown command.");
-                break;
-        }
-    }
-
-    private async Task HandleHelp(StreamWriter writer)
-    {
-        var sb = new StringBuilder();
-        sb.AppendLine("--- Help ---");
-        sb.AppendLine("Available commands:");
-        sb.AppendLine("  go <direction> / jdi <směr>    - Move to a different room (e.g., 'go north').");
-        sb.AppendLine("  look / prozkoumej              - See the description of the current room.");
-        sb.AppendLine("  take <item> / vezmi <předmět>  - Pick up an item from the room.");
-        sb.AppendLine("  drop <item> / poloz <předmět>  - Drop an item from your inventory.");
-        sb.AppendLine("  inventory / inventar           - Check your inventory.");
-        sb.AppendLine("  talk <npc> / mluv <npc>        - Talk to a character in the room.");
-        sb.AppendLine("  help / pomoc                   - Display this help message.");
-        await writer.WriteLineAsync(sb.ToString());
-    }
-
-    private void HandleMove(string? direction, Player player, StreamWriter writer)
-    {
-        if (string.IsNullOrWhiteSpace(direction))
-        {
-            writer.WriteLine("Go where?");
-            return;
-        }
-
-        if (player.CurrentRoom.Exits.TryGetValue(direction, out Room? nextRoom))
-        {
-            player.CurrentRoom.PlayersInRoom.TryRemove(player.Name, out _);
-            player.CurrentRoom = nextRoom;
-            player.CurrentRoom.PlayersInRoom[player.Name] = player;
-            writer.WriteLine($"You go {direction}.");
-            writer.WriteLine(player.CurrentRoom.GetRoomDescription(player));
-        }
-        else
-        {
-            writer.WriteLine("You can't go that way.");
-        }
-    }
-
-    private void HandleTake(string? itemName, Player player, StreamWriter writer)
-    {
-        if (string.IsNullOrWhiteSpace(itemName))
-        {
-            writer.WriteLine("Take what?");
-            return;
-        }
-
-        var item = player.CurrentRoom.Items.FirstOrDefault(i => i.name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
-        if (item != null)
-        {
-            if (player.AddToInventory(item))
-            {
-                player.CurrentRoom.Items.Remove(item);
-                writer.WriteLine($"You took the {item.name}.");
-            }
-            else
-            {
-                writer.WriteLine("Your inventory is full.");
-            }
-        }
-        else
-        {
-            writer.WriteLine("That item is not here.");
-        }
-    }
-
-    private void HandleDrop(string? itemName, Player player, StreamWriter writer)
-    {
-        if (string.IsNullOrWhiteSpace(itemName))
-        {
-            writer.WriteLine("Drop what?");
-            return;
-        }
-
-        var item = player.GetInventory().FirstOrDefault(i => i.name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
-        if (item != null)
-        {
-            player.RemoveFromInventory(item);
-            player.CurrentRoom.Items.Add(item);
-            writer.WriteLine($"You dropped the {item.name}.");
-        }
-        else
-        {
-            writer.WriteLine("You don't have that item.");
-        }
-    }
-
-    private void HandleTalk(string? npcName, Player player, StreamWriter writer)
-    {
-        if (string.IsNullOrWhiteSpace(npcName))
-        {
-            writer.WriteLine("Talk to whom?");
-            return;
-        }
-
-        var npc = player.CurrentRoom.NPCs.FirstOrDefault(n => n.Name.Equals(npcName, StringComparison.OrdinalIgnoreCase));
-        if (npc != null)
-        {
-            writer.WriteLine($"{npc.Name} says: \"{npc.Text}\"");
-        }
-        else
-        {
-            writer.WriteLine("That person is not here.");
         }
     }
 }
