@@ -6,8 +6,9 @@ namespace MUD_Oberstein_Opletal;
 
 public class Room
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 
     // Use string (direction) as key and Room as value
     public Dictionary<string, Room> Exits { get; set; } = new();
@@ -17,6 +18,8 @@ public class Room
     
     // Players in this specific room
     public ConcurrentDictionary<string, Player> PlayersInRoom { get; set; } = new();
+
+    public Room() { }
 
     public Room(string name, string description)
     {

@@ -1,6 +1,6 @@
-﻿namespace MUD_Oberstein_Opletal;
+namespace MUD_Oberstein_Opletal;
 
 public abstract class Character
 {
-    public string Name;
+    public string Name { get; set; } = string.Empty;
 }

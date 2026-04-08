@@ -7,13 +7,14 @@ namespace MUD_Oberstein_Opletal;
 
 public class Player : Character
 {
-    public string Name { get; }
+    public new string Name { get; }
     public Room CurrentRoom { get; set; }
     
     // Uložíme si writer, abychom mohli hráči kdykoliv poslat asynchronní zprávu.
     public StreamWriter Writer { get; }
 
     private readonly List<Item> _inventory = new();
+    public List<Item> Inventory => _inventory;
     public int MaxInventoryCapacity { get; } = 10;
 
     public Player(string name, Room startingRoom, StreamWriter writer)

@@ -1,0 +1,62 @@
+{
+  "Rooms": [
+    {
+      "Id": "entrance",
+      "Name": "Entrance Hall",
+      "Description": "A grand hall with a dusty chandelier. The main door is sealed shut.",
+      "Exits": {
+        "north": "library",
+        "east": "garden"
+      },
+      "Items": ["key"],
+      "NPCs": ["oldman"]
+    },
+    {
+      "Id": "library",
+      "Name": "Library",
+      "Description": "Rows of ancient books line the walls. A faint smell of vanilla hangs in the air.",
+      "Exits": {
+        "south": "entrance"
+      },
+      "Items": ["book"]
+    },
+    {
+      "Id": "garden",
+      "Name": "Garden",
+      "Description": "A once beautiful garden, now overgrown with thorny vines.",
+      "Exits": {
+        "west": "entrance"
+      },
+      "Items": ["flower"],
+      "NPCs": ["ghost"]
+    }
+  ],
+  "Items": [
+    {
+      "Id": "key",
+      "Name": "key",
+      "Action": "win_game"
+    },
+    {
+      "Id": "book",
+      "Name": "book"
+    },
+    {
+      "Id": "flower",
+      "Name": "flower"
+    }
+  ],
+  "NPCs": [
+    {
+      "Id": "oldman",
+      "Name": "Old Man",
+      "Dialog": "Greetings, traveler. This castle has been empty for a long time... or has it?"
+    },
+    {
+      "Id": "ghost",
+      "Name": "Ghost",
+      "Dialog": "Woooo... who dares disturb my slumber?"
+    }
+  ],
+  "StartingRoomId": "entrance"
+}

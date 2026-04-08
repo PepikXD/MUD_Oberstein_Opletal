@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -24,6 +24,8 @@ namespace MUD_Oberstein_Opletal.Commands
             RegisterCommand("mluv", new TalkCommand());
             RegisterCommand("help", new HelpCommand());
             RegisterCommand("pomoc", new HelpCommand());
+            RegisterCommand("use", new UseCommand());
+            RegisterCommand("pouzij", new UseCommand());
         }
 
         private void RegisterCommand(string name, ICommand command)
