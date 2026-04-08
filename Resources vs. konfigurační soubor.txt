@@ -1,0 +1,56 @@
+Co by v textové hře mohlo být resource
+Do resources je vhodné dát věci, které jsou součástí hry jako aplikace, a nechceme, aby je hráč běžně měnil.
+
+Příklady:
+
+název hry
+logo nebo ikona
+výchozí texty UI
+texty tlačítek
+ chybové hlášky
+krátká nápověda
+defaultní uvítací zpráva
+ lokalizované texty
+Nejsou data hry, ani nastavení sítě, ale obsah aplikace.
+
+Co by v textové hře mělo být config
+Do configu je vhodné zařadit vše, co je nastavení klienta nebo serveru.
+
+Na klientovi
+
+IP adresa serveru
+port serveru
+jméno klientské aplikace
+timeout
+zapnutí/vypnutí logování
+Na serveru
+
+port, na kterém server naslouchá
+max. počet hráčů
+cesta k save souborům
+cesta k mapám nebo scénářům
+režim debug
+interval automatického ukládání
+Je důležité si uvědomit:
+
+config se může měnit bez zásahu do kódu
+server a klient mohou mít odlišný config
+Co by mělo být v externích souborech
+Externí soubory je vhodné použít pro:
+
+mapu světa
+seznam místností
+popisy lokací
+seznam předmětů
+uložené hry
+statistiky hráčů
+logy
+případně skriptované dialogy
+Proč ne do resources:
+
+jsou to data hry
+mohou být větší
+mohou se měnit
+chcete je možná snadno upravovat
+nechcete kvůli změně mapy překládat celý projekt
+Mapa hry není nastavení aplikace a zároveň to není resource UI. Je to herní obsah.

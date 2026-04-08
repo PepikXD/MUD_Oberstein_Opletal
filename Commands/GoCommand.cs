@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MUD_Oberstein_Opletal.Commands
@@ -15,9 +15,14 @@ namespace MUD_Oberstein_Opletal.Commands
 
             if (player.CurrentRoom.Exits.TryGetValue(argument, out Room? nextRoom))
             {
+                await player.CurrentRoom.BroadcastAsync($"[!] {player.Name} odchází směr {argument}.", player);
                 player.CurrentRoom.PlayersInRoom.TryRemove(player.Name, out _);
+                
                 player.CurrentRoom = nextRoom;
+                
                 player.CurrentRoom.PlayersInRoom[player.Name] = player;
+                await player.CurrentRoom.BroadcastAsync($"[!] {player.Name} přichází.", player);
+
                 await writer.WriteLineAsync($"You go {argument}.");
                 await writer.WriteLineAsync(player.CurrentRoom.GetRoomDescription(player));
             }

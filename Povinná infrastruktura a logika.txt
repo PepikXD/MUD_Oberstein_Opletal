@@ -1,0 +1,62 @@
+﻿Každá dvojice musí splnit všechny následující požadavky. Tyto požadavky zahrnují jak infrastrukturní části systému, tak základní vlastnosti samotné hry
+
+I1 – Načítání herního světa z externích souborů
+Herní svět se musí načítat z externích resource souborů, například ve formátu JSON, XML nebo jiném vhodném formátu dle vaší volby.
+
+To zahrnuje zejména:
+
+místnosti,
+předměty,
+NPC postavy,
+dialogy,
+případně další herní data.
+Požadavky:
+
+Server nesmí mít herní data napevno v kódu.
+Změna herního světa nesmí vyžadovat rekompilaci aplikace.
+Použitý formát souborů musí být popsán v dokumentaci.
+I2 – Logování
+Server musí zaznamenávat důležité události, například:
+
+připojení a odpojení hráče,
+zadané příkazy,
+chyby a výjimečné stavy.
+Požadavky:
+
+Logy se ukládají do souboru.
+Každý záznam obsahuje časovou značku.
+Konkrétní formát logu je na vašem rozhodnutí.
+Logování nesmí výrazně zpomalovat obsluhu klientů.
+I3 – Přihlášení a persistence hráče
+Hra musí podporovat základní systém uživatelských účtů.
+
+Požadavky:
+
+Hráč se přihlašuje pomocí jména a hesla.
+Nový hráč si může vytvořit účet.
+Při odpojení se uloží stav hráče, například:
+aktuální pozice v herním světě,
+inventář,
+postup hrou.
+Při dalším přihlášení se uložený stav obnoví.
+Hesla nesmí být ukládána v čistém textu.
+I4 – Vlastní klientský program
+Součástí řešení bude vaše vlastní klientská aplikace.
+
+Požadavky:
+
+Klient může být konzolový nebo mít jednoduché GUI.
+Klient se připojí k serveru, zobrazuje výstup a odesílá příkazy od uživatele.
+PuTTY nebo jiný TCP klient může sloužit pouze pro testování.
+Finální odevzdané řešení musí obsahovat vlastního klienta.
+P1 – Dokončení hry
+Hra musí mít definovaný cíl nebo více cílů, například:
+
+sesbírat určité artefakty,
+porazit finálního protivníka,
+vyřešit sérii hádanek.
+Požadavky:
+
+Hráč musí mít možnost hru skutečně dokončit.
+Po splnění cíle hráč obdrží jasné oznámení o dokončení hry.
+Výsledek dokončení se uloží do statistik, žebříčku nebo jiného přehledu výsledků.

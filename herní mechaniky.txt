@@ -1,0 +1,26 @@
+﻿M1 – Komunikace mezi hráči
+Příkaz rekni odešle zprávu všem hráčům ve stejné místnosti.
+Příkaz krik odešle zprávu všem připojeným hráčům bez ohledu na místnost.
+Ostatní hráči vidí oznámení, když někdo vstoupí do jejich místnosti nebo ji opustí.
+Volitelně lze doplnit soukromé zprávy mezi hráči.
+
+M8 – Používání předmětů
+Předměty mají definovaný účinek při použití.
+Hráč je může aktivovat příkazem.
+Účinky a pravidla použití jsou načítány z externích souborů.
+
+M5 – Proměnné dialogy s NPC
+NPC mají více možných odpovědí.
+Dialog může reagovat na stav hry nebo volbu hráče.
+Dialogy nejsou napevno v kódu, ale načítají se ze souborů.
+
+M10 – Úkoly / questy
+Hráč může získávat a plnit jednoduché úkoly.
+Úkol může spočívat například v doručení předmětu, poražení NPC nebo nalezení konkrétní lokace.
+Po splnění úkolu hráč získá odměnu.
+Stav úkolu se ukládá jako součást postupu hrou.
+
+M4 – Obchodování
+Speciální NPC obchodují s hráčem za herní měnu.
+Hráč získává měnu aktivitami ve hře.
+Nabídka a ceny jsou načítány z externích souborů.

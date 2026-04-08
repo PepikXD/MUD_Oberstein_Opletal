@@ -83,4 +83,17 @@ public class Room
 
         return sb.ToString();
     }
-}
+
+    public async Task BroadcastAsync(string message, Player? excludePlayer = null)
+    {
+        var tasks = new List<Task>();
+        foreach (var p in PlayersInRoom.Values)
+        {
+            if (excludePlayer != null && p.Name == excludePlayer.Name)
+                continue;
+                
+            tasks.Add(p.SendMessageAsync(message));
+        }
+        await Task.WhenAll(tasks);
+    }
+}

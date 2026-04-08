@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
@@ -74,7 +74,7 @@ public class Server
                 string? playerName = await PromptForPlayerName(writer, reader);
                 if (playerName == null) return;
 
-                player = new Player(playerName, _world.StartingRoom);
+                player = new Player(playerName, _world.StartingRoom, writer);
                 ClientPlayer[tcpClient] = player;
                 
                 player.CurrentRoom.PlayersInRoom[player.Name] = player;
@@ -82,6 +82,7 @@ public class Server
                 await writer.WriteLineAsync($"Welcome to the game, {player.Name}!");
                 Console.WriteLine($"Player '{player.Name}' logged in.");
                 
+                await player.CurrentRoom.BroadcastAsync($"[!] {player.Name} se připojil(a) do hry.", player);
                 await writer.WriteLineAsync(player.CurrentRoom.GetRoomDescription(player));
 
                 while (tcpClient.Connected)
@@ -103,6 +104,7 @@ public class Server
             if (player != null)
             {
                 player.CurrentRoom.PlayersInRoom.TryRemove(player.Name, out _);
+                _ = player.CurrentRoom.BroadcastAsync($"[!] {player.Name} se odpojil(a) ze hry.");
                 ClientPlayer.TryRemove(tcpClient, out _);
                 Console.WriteLine($"Client '{player.Name}' disconnected.");
             }

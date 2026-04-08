@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MUD_Oberstein_Opletal;
 
@@ -7,14 +9,33 @@ public class Player : Character
 {
     public string Name { get; }
     public Room CurrentRoom { get; set; }
+    
+    // Uložíme si writer, abychom mohli hráči kdykoliv poslat asynchronní zprávu.
+    public StreamWriter Writer { get; }
 
     private readonly List<Item> _inventory = new();
     public int MaxInventoryCapacity { get; } = 10;
 
-    public Player(string name, Room startingRoom)
+    public Player(string name, Room startingRoom, StreamWriter writer)
     {
         Name = name;
         CurrentRoom = startingRoom;
+        Writer = writer;
+    }
+
+    public async Task SendMessageAsync(string message)
+    {
+        try
+        {
+            if (Writer.BaseStream.CanWrite)
+            {
+                await Writer.WriteLineAsync(message);
+            }
+        }
+        catch 
+        {
+            // Pokud spojení už neexistuje, chybu tiše spolkneme.
+        }
     }
 
     public bool AddToInventory(Item item)

@@ -1,0 +1,39 @@
+﻿Cílem je vytvořit MVP textového MUDu (Multi-User Dungeon), tedy jednoduchý funkční herní svět, ke kterému se lze připojit přes PuTTY nebo jiného TCP klienta bez grafického rozhraní.
+
+Server a síť
+Aplikace musí splňovat následující požadavky:
+
+Server naslouchá na konfigurovatelném portu.
+Server umožňuje současné připojení více klientů
+Každý klient je obsluhován asynchronně (async/await).
+Odpojení klienta, včetně náhlého přerušení spojení, nesmí způsobit pád serveru.
+Po připojení je hráč vyzván k zadání svého jména.
+Pohyb a herní svět
+Hráč se pohybuje příkazem jdi <místnost/směr> (nebo jiným vhodným příkazem).
+Při vstupu do místnosti, stejně jako po zadání příkazu prozkoumej(nebo při použití jiného vhodného příkazu), se zobrazí:
+název místnosti,
+popis místnosti,
+dostupné východy,
+předměty v místnosti,
+NPC postavy v místnosti,
+ostatní přítomní hráči.
+Způsob reprezentace místností a jejich propojení je na vašem návrhu
+(např. pole, seznam, slovník, graf apod.).
+Předměty
+V místnostech se nacházejí předměty.
+Hráč si může předměty:
+vzít do inventáře,
+odložit zpět do místnosti.
+Příkaz inventar (nebo jiný vhodný ekvivalent) zobrazí:
+obsah inventáře,
+maximální kapacitu inventáře.
+Postavy v místnosti
+V místnostech se mohou nacházet NPC postavy (non-player characters).
+Hráč s nimi může komunikovat příkazem mluv <jméno>
+(nebo jiným vhodným příkazem).
+V rámci MVP stačí, aby každá NPC postava vracela pevně daný předem definovaný text.
+Ostatní připojení hráči se také zobrazují jako „postavy“ v místnosti
+Nápověda
+Příkaz pomoc (nebo jiný vhodný ekvivalent) zobrazí:
+seznam všech podporovaných příkazů,
+krátký popis jejich použití.

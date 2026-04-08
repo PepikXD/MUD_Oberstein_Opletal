@@ -8,7 +8,7 @@ class Program
     static async Task Main(string[] args)
     {
         // Configurable port (e.g., via arguments or hardcoded for testing)
-        int port = 5000;
+        int port = 8080;
         if (args.Length > 0 && int.TryParse(args[0], out int parsedPort))
         {
             port = parsedPort;
