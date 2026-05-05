@@ -11,42 +11,43 @@ Textová multiplayerová hra (Multi-User Dungeon) postavená na architektuře kl
 
 ```
 MUD_Oberstein_Opletal/
-├── Program.cs                 # Vstupní bod serveru
-├── Server.cs                  # TCP Listener, správa klientů
-├── AccountManager.cs          # Registrace, přihlášení, persistence hráčů
-├── Player.cs                  # Herní entita hráče (inventář, questy, currency)
-├── World.cs                   # Načítání a správa herního světa z JSON
-├── Room.cs                    # Místnost (exits, items, NPCs, broadcast)
-├── NPC.cs                     # Definice NPC postav
-├── Item.cs                    # Definice herních předmětů
-├── Dialog.cs                  # Dialogový systém (stavový automat)
-├── Quest.cs                   # Enum QuestState
-├── Logger.cs                  # Asynchronní logování do souboru
-├── Resources.cs               # Systémové hlášky a texty
-├── Commands/                  # Implementace herních příkazů
-│   ├── ICommand.cs
-│   ├── CommandHandler.cs
-│   ├── GoCommand.cs           # Pohyb mezi místnostmi
-│   ├── LookCommand.cs         # Prozkoumání místnosti
-│   ├── TakeCommand.cs         # Sebrání předmětu
-│   ├── DropCommand.cs         # Odložení předmětu
-│   ├── InventoryCommand.cs    # Zobrazení inventáře
-│   ├── TalkCommand.cs         # Rozhovor s NPC
-│   ├── UseCommand.cs          # Použití předmětu (M8)
-│   ├── SayCommand.cs          # Lokální chat (M1)
-│   ├── ShoutCommand.cs        # Globální chat (M1)
-│   ├── BuyCommand.cs          # Nákup od obchodníka (M4)
-│   ├── SellCommand.cs         # Prodej obchodníkovi (M4)
-│   └── HelpCommand.cs         # Nápověda
-├── Data/
-│   └── world.json             # Herní svět (místnosti, předměty, NPC, dialogy)
-├── Accounts/                  # Uložené profily hráčů (JSON)
-├── Logs/
-│   └── server.log             # Serverové logy
-├── MUD_Client/                # Klientská aplikace
-│   ├── Program.cs
-│   └── appsettings.json       # Konfigurace klienta (IP, port)
-├── appsettings.json           # Konfigurace serveru (port, cesty)
+├── src/
+│   ├── Program.cs                 # Vstupní bod serveru
+│   ├── Server.cs                  # TCP Listener, správa klientů
+│   ├── AccountManager.cs          # Registrace, přihlášení, persistence hráčů
+│   ├── Player.cs                  # Herní entita hráče (inventář, questy, currency)
+│   ├── World.cs                   # Načítání a správa herního světa z JSON
+│   ├── Room.cs                    # Místnost (exits, items, NPCs, broadcast)
+│   ├── NPC.cs                     # Definice NPC postav
+│   ├── Item.cs                    # Definice herních předmětů
+│   ├── Dialog.cs                  # Dialogový systém (stavový automat)
+│   ├── Quest.cs                   # Enum QuestState
+│   ├── Logger.cs                  # Asynchronní logování do souboru
+│   ├── Resources.cs               # Systémové hlášky a texty
+│   ├── Commands/                  # Implementace herních příkazů
+│   │   ├── ICommand.cs
+│   │   ├── CommandHandler.cs
+│   │   ├── GoCommand.cs           # Pohyb mezi místnostmi
+│   │   ├── LookCommand.cs         # Prozkoumání místnosti
+│   │   ├── TakeCommand.cs         # Sebrání předmětu
+│   │   ├── DropCommand.cs         # Odložení předmětu
+│   │   ├── InventoryCommand.cs    # Zobrazení inventáře
+│   │   ├── TalkCommand.cs         # Rozhovor s NPC
+│   │   ├── UseCommand.cs          # Použití předmětu (M8)
+│   │   ├── SayCommand.cs          # Lokální chat (M1)
+│   │   ├── ShoutCommand.cs        # Globální chat (M1)
+│   │   ├── BuyCommand.cs          # Nákup od obchodníka (M4)
+│   │   ├── SellCommand.cs         # Prodej obchodníkovi (M4)
+│   │   └── HelpCommand.cs         # Nápověda
+│   ├── Data/
+│   │   └── world.json             # Herní svět (místnosti, předměty, NPC, dialogy)
+│   ├── Accounts/                  # Uložené profily hráčů (JSON)
+│   ├── Logs/
+│   │   └── server.log             # Serverové logy
+│   ├── MUD_Client/                # Klientská aplikace
+│   │   ├── Program.cs
+│   │   └── appsettings.json       # Konfigurace klienta (IP, port)
+│   └── appsettings.json           # Konfigurace serveru (port, cesty)
 └── prepare_tests.py           # Skript pro přípravu testovacího prostředí
 ```
 
@@ -55,7 +56,7 @@ MUD_Oberstein_Opletal/
 ### Server
 
 ```bash
-cd MUD_Oberstein_Opletal
+cd src
 dotnet run
 ```
 
@@ -64,11 +65,11 @@ Server se spustí na portu definovaném v `appsettings.json` (výchozí `8080`).
 ### Klient
 
 ```bash
-cd MUD_Client
+cd src/MUD_Client
 dotnet run
 ```
 
-Klient se připojí na IP a port z `MUD_Client/appsettings.json` (výchozí `127.0.0.1:8080`).
+Klient se připojí na IP a port z `src/MUD_Client/appsettings.json` (výchozí `127.0.0.1:8080`).
 
 ## Konfigurace
 
