@@ -5,6 +5,7 @@ public class Item
     public string Id { get; set; } = string.Empty;
     public string name { get; set; } = string.Empty;
     public string Action { get; set; } = string.Empty;
+    public int Price { get; set; } = 0;
 
     public Item() { }
 

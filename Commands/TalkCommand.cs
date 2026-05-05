@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,14 +15,15 @@ namespace MUD_Oberstein_Opletal.Commands
                 return;
             }
 
-            var npc = player.CurrentRoom.NPCs.FirstOrDefault(n => n.Name.Equals(argument, StringComparison.OrdinalIgnoreCase));
+            var npc = player.CurrentRoom.NPCs.FirstOrDefault(n => n.Name.StartsWith(argument, StringComparison.OrdinalIgnoreCase));
             if (npc != null)
             {
-                await writer.WriteLineAsync($"{npc.Name} says: \"{npc.Text}\"");
+                player.ActiveDialog = new DialogSession(player, npc);
+                await player.ActiveDialog.StartAsync();
             }
             else
             {
-                await writer.WriteLineAsync("That person is not here.");
+                await writer.WriteLineAsync($"No one named '{argument}' is here to talk to.");
             }
         }
     }

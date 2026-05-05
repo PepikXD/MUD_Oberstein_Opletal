@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace MUD_Oberstein_Opletal.Commands
                 return;
             }
 
-            var item = player.GetInventory().FirstOrDefault(i => i.name.Equals(argument, StringComparison.OrdinalIgnoreCase));
+            var item = player.GetInventory().FirstOrDefault(i => i.name.StartsWith(argument, StringComparison.OrdinalIgnoreCase));
             if (item != null)
             {
                 player.RemoveFromInventory(item);

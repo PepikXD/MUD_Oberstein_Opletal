@@ -28,6 +28,7 @@ public class ItemData
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Action { get; set; } = string.Empty;
+    public int Price { get; set; } = 0;
 }
 
 public class NPCData
@@ -35,6 +36,10 @@ public class NPCData
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Dialog { get; set; } = string.Empty;
+    public bool IsMerchant { get; set; } = false;
+    public List<string> ItemsForSale { get; set; } = new();
+    public string StartingDialogNodeId { get; set; } = string.Empty;
+    public Dictionary<string, DialogNode> DialogTree { get; set; } = new();
 }
 
 public class World
@@ -52,7 +57,7 @@ public class World
     {
         if (_itemDefinitions.TryGetValue(id, out var data))
         {
-            return new Item(data.Name) { Id = data.Id, Action = data.Action };
+            return new Item(data.Name) { Id = data.Id, Action = data.Action, Price = data.Price };
         }
         return null;
     }
@@ -75,7 +80,7 @@ public class World
         foreach (var itemData in worldData.Items)
         {
             _itemDefinitions[itemData.Id] = itemData;
-            var item = new Item(itemData.Name) { Id = itemData.Id, Action = itemData.Action };
+            var item = new Item(itemData.Name) { Id = itemData.Id, Action = itemData.Action, Price = itemData.Price };
             itemsDict[itemData.Id] = item;
         }
 
@@ -83,7 +88,14 @@ public class World
         var npcsDict = new Dictionary<string, NPC>();
         foreach (var npcData in worldData.NPCs)
         {
-            var npc = new NPC(npcData.Name, npcData.Dialog) { Id = npcData.Id };
+            var npc = new NPC(npcData.Name, npcData.Dialog) 
+            { 
+                Id = npcData.Id, 
+                IsMerchant = npcData.IsMerchant, 
+                ItemsForSale = npcData.ItemsForSale,
+                StartingDialogNodeId = npcData.StartingDialogNodeId,
+                DialogTree = npcData.DialogTree
+            };
             npcsDict[npcData.Id] = npc;
         }
 

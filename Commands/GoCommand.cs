@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MUD_Oberstein_Opletal.Commands
@@ -13,9 +14,18 @@ namespace MUD_Oberstein_Opletal.Commands
                 return;
             }
 
-            if (player.CurrentRoom.Exits.TryGetValue(argument, out Room? nextRoom))
+            string direction = argument.ToLower();
+            
+            // Auto-complete direction if it matches the start of any available exit
+            var matchedExit = player.CurrentRoom.Exits.Keys.FirstOrDefault(k => k.StartsWith(direction, System.StringComparison.OrdinalIgnoreCase));
+            if (matchedExit != null)
             {
-                await player.CurrentRoom.BroadcastAsync($"[!] {player.Name} odchází směr {argument}.", player);
+                direction = matchedExit;
+            }
+
+            if (player.CurrentRoom.Exits.TryGetValue(direction, out Room? nextRoom))
+            {
+                await player.CurrentRoom.BroadcastAsync($"[!] {player.Name} odchází směr {direction}.", player);
                 player.CurrentRoom.PlayersInRoom.TryRemove(player.Name, out _);
                 
                 player.CurrentRoom = nextRoom;

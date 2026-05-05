@@ -26,6 +26,14 @@ namespace MUD_Oberstein_Opletal.Commands
             RegisterCommand("pomoc", new HelpCommand());
             RegisterCommand("use", new UseCommand());
             RegisterCommand("pouzij", new UseCommand());
+            RegisterCommand("say", new SayCommand());
+            RegisterCommand("rekni", new SayCommand());
+            RegisterCommand("shout", new ShoutCommand());
+            RegisterCommand("krik", new ShoutCommand());
+            RegisterCommand("buy", new BuyCommand());
+            RegisterCommand("nakup", new BuyCommand());
+            RegisterCommand("sell", new SellCommand());
+            RegisterCommand("prodej", new SellCommand());
         }
 
         private void RegisterCommand(string name, ICommand command)

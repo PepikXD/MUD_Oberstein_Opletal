@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +17,7 @@ namespace MUD_Oberstein_Opletal.Commands
             sb.AppendLine("  drop <item> / poloz <předmět>  - Drop an item from your inventory.");
             sb.AppendLine("  inventory / inventar           - Check your inventory.");
             sb.AppendLine("  talk <npc> / mluv <npc>        - Talk to a character in the room.");
+            sb.AppendLine("  use <item> / pouzij <předmět>  - Use an item from your inventory.");
             sb.AppendLine("  help / pomoc                   - Display this help message.");
             await writer.WriteLineAsync(sb.ToString());
         }

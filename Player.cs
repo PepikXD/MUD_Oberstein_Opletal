@@ -9,19 +9,38 @@ public class Player : Character
 {
     public new string Name { get; }
     public Room CurrentRoom { get; set; }
+    public int Currency { get; set; } = 100;
     
     // Uložíme si writer, abychom mohli hráči kdykoliv poslat asynchronní zprávu.
     public StreamWriter Writer { get; }
+    
+    // Odkaz na samotný server (pro broadcastování atd.)
+    public Server Server { get; }
 
     private readonly List<Item> _inventory = new();
     public List<Item> Inventory => _inventory;
     public int MaxInventoryCapacity { get; } = 10;
+    
+    public Dictionary<string, QuestState> Quests { get; set; } = new();
+    public DialogSession? ActiveDialog { get; set; }
 
-    public Player(string name, Room startingRoom, StreamWriter writer)
+    public QuestState GetQuestState(string questId)
+    {
+        if (Quests.TryGetValue(questId, out var state)) return state;
+        return QuestState.NotStarted;
+    }
+
+    public void SetQuestState(string questId, QuestState state)
+    {
+        Quests[questId] = state;
+    }
+
+    public Player(string name, Room startingRoom, StreamWriter writer, Server server)
     {
         Name = name;
         CurrentRoom = startingRoom;
         Writer = writer;
+        Server = server;
     }
 
     public async Task SendMessageAsync(string message)

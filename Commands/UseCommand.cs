@@ -31,6 +31,11 @@ public class UseCommand : ICommand
             await player.CurrentRoom.BroadcastAsync($"[!] {player.Name} used {item.name} and unlocked the secret of the castle! {player.Name} has won the game!");
             await writer.WriteLineAsync("Congratulations! You have completed your adventure!");
             
+            // P1: Výsledek dokončení se uloží do statistik
+            string statsPath = "Data/statistics.txt";
+            Directory.CreateDirectory("Data");
+            File.AppendAllText(statsPath, $"[{System.DateTime.Now:yyyy-MM-dd HH:mm:ss}] Player {player.Name} has won the game!" + System.Environment.NewLine);
+
             // To properly exit the client from the server, we can drop connection gracefully 
             // by closing the stream, or letting the main loop know.
             writer.BaseStream.Close(); // This kicks the player and ends their HandleClientAsync loop

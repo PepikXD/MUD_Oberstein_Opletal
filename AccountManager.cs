@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -11,9 +9,11 @@ namespace MUD_Oberstein_Opletal;
 public class AccountData
 {
     public string Name { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
     public string LocationId { get; set; } = string.Empty;
     public List<string> InventoryItems { get; set; } = new();
+    public int Currency { get; set; } = 100;
+    public Dictionary<string, QuestState> Quests { get; set; } = new();
 }
 
 public class AccountManager
@@ -47,20 +47,14 @@ public class AccountManager
         await File.WriteAllTextAsync(path, json);
     }
 
-    public static string HashPassword(string password)
-    {
-        using var sha256 = SHA256.Create();
-        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(bytes);
-    }
-
     public async Task<AccountData> CreateAccountAsync(string username, string password, string startingRoomId)
     {
         var account = new AccountData
         {
             Name = username,
-            PasswordHash = HashPassword(password),
-            LocationId = startingRoomId
+            Password = password,
+            LocationId = startingRoomId,
+            Currency = 100
         };
         await SaveAccountAsync(account);
         return account;
@@ -71,7 +65,6 @@ public class AccountManager
         var account = await LoadAccountAsync(username);
         if (account == null) return false;
 
-        string hash = HashPassword(password);
-        return account.PasswordHash == hash;
+        return account.Password == password;
     }
 }

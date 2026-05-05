@@ -17,7 +17,7 @@ public class Server
     private readonly IConfiguration _config;
     private TcpListener? _listener;
     private bool _isRunning;
-    private readonly World _world;
+    public World World { get; }
     private readonly CommandHandler _commandHandler;
 
     private readonly AccountManager _accountManager;
@@ -30,7 +30,7 @@ public class Server
         _config = config;
         
         string worldDataPath = _config.GetValue<string>("Paths:WorldData", "Data/world.json")!;
-        _world = new World(worldDataPath);
+        World = new World(worldDataPath);
         
         string accountsPath = _config.GetValue<string>("Paths:Accounts", "Accounts")!;
         _accountManager = new AccountManager(accountsPath);
@@ -86,18 +86,20 @@ public class Server
                 accountData = await LoginFlowAsync(writer, reader);
                 if (accountData == null) return;
 
-                Room startingLoc = _world.StartingRoom;
-                if (!string.IsNullOrEmpty(accountData.LocationId) && _world.Rooms.TryGetValue(accountData.LocationId, out var savedRoom))
+                Room startingLoc = World.StartingRoom;
+                if (!string.IsNullOrEmpty(accountData.LocationId) && World.Rooms.TryGetValue(accountData.LocationId, out var savedRoom))
                 {
                     startingLoc = savedRoom;
                 }
 
-                player = new Player(accountData.Name, startingLoc, writer);
+                player = new Player(accountData.Name, startingLoc, writer, this);
+                player.Currency = accountData.Currency;
+                player.Quests = accountData.Quests ?? new Dictionary<string, QuestState>();
                 
                 // Obnova inventáře
                 foreach (var itemId in accountData.InventoryItems)
                 {
-                    var item = _world.CreateItem(itemId);
+                    var item = World.CreateItem(itemId);
                     if (item != null)
                         player.Inventory.Add(item);
                 }
@@ -117,7 +119,16 @@ public class Server
                     string? input = await reader.ReadLineAsync();
                     if (input == null) break;
 
-                    await _commandHandler.ExecuteCommandAsync(input, player, writer);
+                    Logger.LogInfo($"[{player.Name}] command: {input}");
+
+                    if (player.ActiveDialog != null)
+                    {
+                        await player.ActiveDialog.HandleInputAsync(input);
+                    }
+                    else
+                    {
+                        await _commandHandler.ExecuteCommandAsync(input, player, writer);
+                    }
                 }
             }
         }
@@ -137,6 +148,8 @@ public class Server
                 // Save state
                 accountData.LocationId = player.CurrentRoom.Id;
                 accountData.InventoryItems = player.Inventory.Select(i => i.Id).ToList();
+                accountData.Currency = player.Currency;
+                accountData.Quests = player.Quests;
                 await _accountManager.SaveAccountAsync(accountData);
 
                 Logger.LogInfo(string.Format(Resources.LoggedOutMessage, player.Name));
@@ -179,7 +192,7 @@ public class Server
                 string? password = await reader.ReadLineAsync();
                 if (string.IsNullOrEmpty(password)) return null;
 
-                return await _accountManager.CreateAccountAsync(playerName, password, _world.StartingRoom.Id);
+                return await _accountManager.CreateAccountAsync(playerName, password, World.StartingRoom.Id);
             }
         }
     }

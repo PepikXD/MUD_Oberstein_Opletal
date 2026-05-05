@@ -8,7 +8,7 @@
         "north": "library",
         "east": "garden"
       },
-      "Items": ["key"],
+      "Items": [],
       "NPCs": ["oldman"]
     },
     {
@@ -35,27 +35,144 @@
     {
       "Id": "key",
       "Name": "key",
-      "Action": "win_game"
+      "Action": "win_game",
+      "Price": 500
     },
     {
       "Id": "book",
-      "Name": "book"
+      "Name": "book",
+      "Price": 50
     },
     {
       "Id": "flower",
-      "Name": "flower"
+      "Name": "flower",
+      "Price": 10
+    },
+    {
+      "Id": "potion",
+      "Name": "potion",
+      "Price": 100
+    },
+    {
+      "Id": "ancient_coin",
+      "Name": "ancient_coin",
+      "Price": 500
     }
   ],
   "NPCs": [
     {
       "Id": "oldman",
       "Name": "Old Man",
-      "Dialog": "Greetings, traveler. This castle has been empty for a long time... or has it?"
+      "Dialog": "Greetings, traveler.",
+      "IsMerchant": true,
+      "ItemsForSale": ["potion", "key"],
+      "StartingDialogNodeId": "root",
+      "DialogTree": {
+         "root": {
+            "Id": "root",
+            "Text": "Hello there! Could you find my lost book?",
+            "Options": [
+               { 
+                 "Text": "I'll look for it.", 
+                 "NextNodeId": "accept_quest", 
+                 "RequiredQuest": "lost_book",
+                 "RequiredQuestState": "NotStarted",
+                 "SetQuestState": "lost_book:Active" 
+               },
+               { 
+                 "Text": "Here is your book.", 
+                 "NextNodeId": "finish_quest", 
+                 "RequiredQuest": "lost_book", 
+                 "RequiredQuestState": "Active", 
+                 "RequiredItem": "book", 
+                 "TakeItem": "book", 
+                 "GiveItem": "potion", 
+                 "SetQuestState": "lost_book:Completed" 
+               },
+               {
+                 "Text": "I'm still looking for it.",
+                 "NextNodeId": "still_looking",
+                 "RequiredQuest": "lost_book",
+                 "RequiredQuestState": "Active"
+               },
+               { 
+                 "Text": "Goodbye.", 
+                 "NextNodeId": "" 
+               }
+            ]
+         },
+         "accept_quest": {
+            "Id": "accept_quest",
+            "Text": "Thank you! Please bring it back.",
+            "Options": []
+         },
+         "finish_quest": {
+            "Id": "finish_quest",
+            "Text": "Oh, wonderful! Here, take this potion as a reward.",
+            "Options": []
+         },
+         "still_looking": {
+            "Id": "still_looking",
+            "Text": "Hurry, please!",
+            "Options": []
+         }
+      }
     },
     {
       "Id": "ghost",
       "Name": "Ghost",
-      "Dialog": "Woooo... who dares disturb my slumber?"
+      "Dialog": "Woooo... who dares disturb my slumber?",
+      "StartingDialogNodeId": "root",
+      "DialogTree": {
+         "root": {
+            "Id": "root",
+            "Text": "Woooo... I cannot rest without my favorite flower...",
+            "Options": [
+               { 
+                 "Text": "I'll look for it.", 
+                 "NextNodeId": "accept_quest", 
+                 "RequiredQuest": "rest_in_peace",
+                 "RequiredQuestState": "NotStarted",
+                 "SetQuestState": "rest_in_peace:Active" 
+               },
+               { 
+                 "Text": "Here is your flower.", 
+                 "NextNodeId": "finish_quest", 
+                 "RequiredQuest": "rest_in_peace", 
+                 "RequiredQuestState": "Active", 
+                 "RequiredItem": "flower", 
+                 "TakeItem": "flower", 
+                 "GiveItem": "ancient_coin", 
+                 "SetQuestState": "rest_in_peace:Completed" 
+               },
+               {
+                 "Text": "I'm still looking for it.",
+                 "NextNodeId": "still_looking",
+                 "RequiredQuest": "rest_in_peace",
+                 "RequiredQuestState": "Active"
+               },
+               { 
+                 "Text": "Goodbye.", 
+                 "NextNodeId": "" 
+               }
+            ]
+         },
+         "accept_quest": {
+            "Id": "accept_quest",
+            "Text": "Woooo... thank you mortal...",
+            "Options": []
+         },
+         "finish_quest": {
+            "Id": "finish_quest",
+            "Text": "Ahhh... I can finally rest... Take this ancient coin...",
+            "Options": []
+         },
+         "still_looking": {
+            "Id": "still_looking",
+            "Text": "Woooo... find it soon...",
+            "Options": []
+         }
+      }
     }
   ],
   "StartingRoomId": "entrance"
